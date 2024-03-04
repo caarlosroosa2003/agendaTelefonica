@@ -1,0 +1,15 @@
+.container-fluid{
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    background-color: rgba(152, 152, 152, 0.75) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.125) !important;
+}
+
+.card {
+    background: rgba(219, 219, 219, 0.959) !important;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37) !important;
+
+    border-radius: 10px !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
