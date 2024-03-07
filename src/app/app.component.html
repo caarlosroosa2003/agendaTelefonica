@@ -21,13 +21,12 @@
                 <div class="card text-black " style="width: 18rem;">
                     <div class="card-body flex-row ">
                         <h5 class="card-title">{{contact.nombre}}</h5>
-                        <p class="card-text" #telefono>{{contact.telefono}}</p>
-                        <button type="button" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#editarContactoModal">Editar</button>
-                        <button href="#" class="btn btn-danger mx-2" (click)="removeContacto(telefono.innerText)">Borrar</button>
+                        <p class="card-text" #telefono>{{contact.phone}}</p>
+                        <button type="button" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#editarContactoModal" (click)="recuperarId(contact.id)">Editar</button>
+                        <button href="#" class="btn btn-danger mx-2" (click)="deleteContact(contact.phone)">Borrar</button>
                     </div>
                 </div>
             </div>
-
         }
     </div>
 
@@ -43,18 +42,18 @@
           <p class="text-white">Edita el contacto seleccionado</p>
           <div class="input-group mb-2">
             <span class="input-group-text text-white">Nombre</span>
-            <input type="text" aria-label="First name" class="form-control" placeholder="Nombre">
+            <input type="text" aria-label="First name" class="form-control" placeholder="Nombre" [formControl]="nombreController">
           </div>
           <p class="text-white" style="font-size: 13px;">El nombre no puede estar vacio</p>
           <div class="input-group">
-            <span class="input-group-text text-white">Tel&eacute;fono</span>
-            <input type="text" aria-label="First name" class="form-control" placeholder="Nº Telefonico">
+            <span class="input-group-text text-white">Telefono</span>
+            <input type="text" aria-label="First name" class="form-control" placeholder="Nº Telefonico" [formControl]="telefonoController">
           </div>
-          <p class="text-white" style="font-size: 13px;">El tel&eacute;fono tiene que tener 9 caracteres y empezar por 6 o 7</p>
+          <p class="text-white" style="font-size: 13px;">El telefono tiene que tener 9 caracteres y empezar por 6 o 7</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary">Guardar Cambios</button>
+          <button type="button" class="btn btn-primary" (click)="updateContacto(nombreController.value, telefonoController.value)">Guardar Cambios</button>
         </div>
       </div>
     </div>

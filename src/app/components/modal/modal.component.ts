@@ -1,7 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { share } from 'rxjs';
 import { SharedService } from '../SharedService/sharedService.component';
+import { SupabaseService } from '../../services/supabase.service';
 
 @Component({
   selector: 'app-modal',
@@ -12,6 +13,7 @@ import { SharedService } from '../SharedService/sharedService.component';
 })
 export class ModalComponent {
 
+  private supabaseService = inject(SupabaseService);
   constructor(private sharedService: SharedService) { }
 
   listContactos = this.sharedService.listContactos;
@@ -35,6 +37,8 @@ export class ModalComponent {
     ]
   });
 
+ 
+
   checkForm(isAdd: boolean) {
     if (this.telefonoController.valid && this.nombreController.valid && isAdd) {
       this.addContacto(this.nombreController.value, this.telefonoController.value);
@@ -45,47 +49,53 @@ export class ModalComponent {
       this.nombreController.reset();
       return true;
     }else{
-      this.updateContacto(this.nombreController.value, this.telefonoController.value);
-      console.log(this.listContactos());
-      console.log(this.nombreController.value);
-      console.log(this.telefonoController.value);
-      this.telefonoController.reset();
-      this.nombreController.reset();
-      return true;
+      
+        this.updateContacto(this.nombreController.value, this.telefonoController.value, this.supabaseService.getID());
+        console.log(this.listContactos());
+        console.log(this.nombreController.value);
+        console.log(this.telefonoController.value);
+        this.telefonoController.reset();
+        this.nombreController.reset();
+        return true;
     }
     return false;
   }
 
   addContacto(name: string, phone: string) {
-    const contactExists = this.listContactos().find(contact => contact.telefono === phone);
-
+    const contactExists = this.listContactos().find(contact => contact.phone === phone);
+    let contacto = {
+      nombre: name,
+      phone: parseInt(phone)
+    }
     if (!contactExists) {
-      this.listContactos.update((listadoContactos) => {
-        return [
-          ...listadoContactos,
-          {
-            id: listadoContactos.length + 1,
-            nombre: name,
-            telefono: phone
-          }
-        ];
+      this.supabaseService.insertContact(contacto).subscribe({
+        next: (data) => {
+          console.log(data);
+        }
+        
       });
     }
   }
 
   removeAllContactos() {
-    this.listContactos.update(() => []);
+    this.supabaseService.deleteAllContacts().subscribe({
+      next: (data) => {
+        console.log(data);
+      }
+    })
   }
 
-  updateContacto(name: string, phone: string) {
-    let listadoContactos = this.listContactos();
-    listadoContactos.map((contact) => {
-      if (contact.telefono === phone) {
-        contact.nombre = name;
-        contact.telefono = phone;
-      }
+  updateContacto(name: string, phone: string, id: number) {
+    const contactExists = this.listContactos().find(contact => contact.id === id);
+    if (contactExists) {
+      this.supabaseService.updateContact(name, phone, id).subscribe({
+        next: (data) => {
+          console.log(data);
+        }
     });
   }
+}
+
 }
 
 
