@@ -75,6 +75,7 @@ export class AppComponent {
         this.supabaseService.deleteContactoByPhone(contacto.phone.toString()).subscribe({
           next: (data) => {
             console.log(data);
+            location.reload();
           }
           
         });

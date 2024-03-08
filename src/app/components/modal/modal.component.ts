@@ -71,6 +71,7 @@ export class ModalComponent {
       this.supabaseService.insertContact(contacto).subscribe({
         next: (data) => {
           console.log(data);
+          location.reload();
         }
         
       });
@@ -91,6 +92,7 @@ export class ModalComponent {
       this.supabaseService.updateContact(name, phone, id).subscribe({
         next: (data) => {
           console.log(data);
+          location.reload();
         }
     });
   }
